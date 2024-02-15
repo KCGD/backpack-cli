@@ -1,0 +1,16 @@
+This is backpack - a program to generate javascript or typescript modules which contain and provide access to files.
+
+This works through the use of zip archives, base64 encoding/decoding, streams and template files
+When packaging:
+    Files are read into memory and archived in a zip file.
+    The zip is then encoded into base64 and embedded in the template file.
+The template file:
+    Contains the nessecary code to read the embedded base64 buffer, convert it back to a zip file in memory and provide access to it's files
+
+This essentially acts as a ROM, as writing to the archive will only maintain changes in memory.
+
+Should have methods:
+    readFileSync - reads a whole file from the ROM and returns it synchronously
+    createReadStream - streams data out of the archive
+
+    both methods should follow fs's president for error handling. This will be limited to file not found as access is not applicable to this

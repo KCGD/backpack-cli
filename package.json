@@ -1,0 +1,14 @@
+{
+  "name": "backpack-cli",
+  "version": "0.0.1",
+  "description": "Allows you to store files in a javascript module",
+  "main": "index.js",
+  "author": "KCGD",
+  "license": "GPL-2.0-only",
+  "dependencies": {
+    "glob": "^10.3.10",
+    "yauzl": "^2.10.0",
+    "yazl": "^2.5.1"
+  },
+  "bin": "cli.js"
+}
