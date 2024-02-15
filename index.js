@@ -11,17 +11,14 @@ const path = require('path');
 const yazl = require('yazl');
 const readline = require('readline');
 const { Buffer } = require('buffer');
-
-const {
-    glob,
-    globSync,
-    globStream,
-    globStreamSync,
-    Glob,
-} = require('glob')
+const { globSync } = require('glob');
 
 //configuration
 const PATCH_PRIMER = "// START DATA";
+
+//globals
+let totalsize = 0;
+let totalfiles = 0;
 
 module.exports = function(f, output, config) {
     let zip = new yazl.ZipFile();
@@ -31,20 +28,19 @@ module.exports = function(f, output, config) {
     //direct output to buffers
     zip.outputStream.on('data', function(data) {
         buffers.push(data);
+        totalsize += data.length;
     })
     zip.outputStream.on('close', function() {
-        console.log("Encoding data ...");
         encoding = Buffer.concat(buffers).toString("base64");
         
         //patch the template
-        console.log(`Patching template ...`);
         patch(path.join(__dirname, "./templates/template.js"), encoding, output);
     })
 
     //start loop and handle next
     _recurseFiles(f, function(err) {
         if(!err) {
-            console.log("Waiting for output stream to drain ...");
+            //await output stream end (see above)
         } else {
             console.log(err);
         }
@@ -75,6 +71,7 @@ function addToZip(zip, pattern, root=".", callback) {
             for(let i = 0; i < files.length; i++) {
                 let file = files[i];
                 zip.addFile(file, path.relative(root, file));
+                totalfiles++;
                 console.log(`Add: ${file}`);
             }
             callback();
@@ -88,6 +85,7 @@ function addToZip(zip, pattern, root=".", callback) {
             if(!fs.statSync(pattern).isDirectory()) {
                 console.log(`Add: ${pattern}`);
                 zip.addFile(pattern, path.relative(root, pattern));
+                totalfiles++;
                 callback();
             } else {
                 //do not handle directories directly
@@ -130,6 +128,6 @@ function patch(template, data, output) {
 
     rl.on('close', function() {
         out.close();
-        console.log(`Generated: ${output}`);
+        console.log(`Generated: ${output} (ROM size: ${(totalsize/1024).toFixed(3)}Kb, containing ${totalfiles} files)`);
     })
 }
