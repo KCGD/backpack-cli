@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const generator = require('./index.js')
 
-const configpath = path.join(__dirname, "./rom.config.json");
+const configpath = path.join(process.cwd(), "./rom.config.json");
 
 Main();
 function Main() {

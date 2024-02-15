@@ -38,7 +38,7 @@ module.exports = function(f, output, config) {
         
         //patch the template
         console.log(`Patching template ...`);
-        patch("./templates/template.js", encoding, output);
+        patch(path.join(__dirname, "./templates/template.js"), encoding, output);
     })
 
     //start loop and handle next
