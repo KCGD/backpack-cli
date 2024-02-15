@@ -1,5 +1,6 @@
 const yauzl = require('yauzl');
 const { Buffer } = require('buffer');
+const { createWriteStream } = require('fs');
 
 // START DATA
 
@@ -21,6 +22,21 @@ module.exports = {
                 })
                 stream.on('end', function() {
                     callback(undefined, Buffer.concat(buf));
+                })
+            } else {
+                callback(err);
+            }
+        })
+    },
+
+    //copyFile - similar to readFile but outputs to a path instead of returning a buffer
+    "copyFile": function(pattern, output, callback=()=>{}) {
+        read(buffer, pattern, (err, res) => {
+            if(!err) {
+                let out = createWriteStream(output);
+                res.pipe(out);
+                res.on('end', function() {
+                    callback();
                 })
             } else {
                 callback(err);
