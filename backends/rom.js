@@ -7,6 +7,7 @@ const { globSync } = require('glob');
 
 module.exports = function(f, output, config){
     let zip = new yazl.ZipFile();
+    console.log(process.cwd());
     let buffers = [];
     let encoding = "";
 
@@ -60,7 +61,7 @@ function addToZip(zip, pattern, root=".", callback) {
             }
             callback();
         } catch (e) {
-            console.log(`File match error: ${err}`);
+            console.log(`File match error: ${e}`);
             callback("ERR_MATCH_FAILED");
         }
     } else {
