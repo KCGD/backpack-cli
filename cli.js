@@ -26,7 +26,7 @@ function Main() {
         } catch (e) {
             console.log(`Malformed config file: ` + e);
             console.log(`Looked for: "${configpath}"`);
-            process.exit(1);
+            throw e;
         }
     } else {
         console.log(`Could not locate rom.config.json (${configpath})`);
