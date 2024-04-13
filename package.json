@@ -1,6 +1,6 @@
 {
   "name": "backpack-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Allows you to store files in a javascript module",
   "main": "index.js",
   "author": "KCGD",
