@@ -10,13 +10,6 @@ const fs = require('fs');
 const path = require('path');
 const romBackend = require("./backends/rom");
 
-//configuration
-const PATCH_PRIMER = "// START DATA";
-
-//globals
-let totalsize = 0;
-let totalfiles = 0;
-
 module.exports = function(f, output, config) {
     romBackend(f, output, config);
 }

@@ -5,6 +5,13 @@ const readline = require('readline');
 const { Buffer } = require('buffer');
 const { globSync } = require('glob');
 
+//configuration
+const PATCH_PRIMER = "// START DATA";
+
+//globals
+let totalsize = 0;
+let totalfiles = 0;
+
 module.exports = function(f, output, config){
     let zip = new yazl.ZipFile();
     console.log(process.cwd());
