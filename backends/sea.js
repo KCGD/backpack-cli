@@ -1,6 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const readline = require('readline');
 const { globSync } = require('glob');
+
+const PATCH_PRIMER = "// START DATA";
 
 module.exports = function(f, output, config) {
     //make sure sea config exists (expected in config.seaConfigPath)
@@ -42,5 +45,35 @@ module.exports = function(f, output, config) {
     fs.writeFileSync(seaConfigPath, JSON.stringify(seaConfig, null, 2));
 
     //write template
-    fs.copyFileSync(path.join(__dirname, "../templates/sea.template.js"), output);
+    patch(path.join(__dirname, "../templates/sea.template.js"), JSON.stringify(seaConfig.assets), output);
+}
+
+//patcher function, given template path, encoding and output, generates a rom module
+function patch(template, data, output) {
+    let primed = false;
+    let out = fs.createWriteStream(output);
+
+    //create interface
+    const rl = readline.createInterface({
+        input: fs.createReadStream(template),
+        crlfDelay: Infinity
+    })
+
+    //handle lines
+    rl.on('line', function(line) {
+        if(primed) {
+            out.write(`const MAP = \`${data}\`;\n`);
+            primed = false;
+        } else {
+            out.write(line + "\n");
+        }
+
+        if(line.includes(PATCH_PRIMER)) {
+            primed = true;
+        }
+    })
+
+    rl.on('close', function() {
+        out.close();
+    })
 }

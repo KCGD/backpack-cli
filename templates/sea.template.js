@@ -1,6 +1,11 @@
-const { createWriteStream } = require('fs');
+const { createWriteStream, existsSync, mkdirSync } = require('fs');
 const sea = require('node:sea');
+const path = require('path');
 const { Readable } = require('stream');
+
+// START DATA
+
+// END DATA
 
 module.exports = {
     //reads file, returns as buffer in callback(error, buffer)
@@ -39,6 +44,38 @@ module.exports = {
                 })
             }
         })
+    },
+
+    "copyDirectory": function(key, outdir, callback) {
+        let map = JSON.parse(MAP);
+        let files = [];
+        let keys = Object.keys(map);
+        for(let i = 0; i < keys.length; i++) {
+            if(keys[i].startsWith(key)) {
+                files.push(path.relative(key, keys[i]));
+            }
+        }
+
+        //at this point, files is a list of files in the source directory to be copied
+        console.log(files);
+        for(let i = 0; i < files.length; i++) {
+            let file = files[i];
+            let fullOutputPath = path.join(outdir, file);
+            if(!existsSync(path.basename(fullOutputPath))) {
+                try {
+                    mkdirSync(path.dirname(fullOutputPath), {'recursive':true});
+                } catch (e) {
+                    callback(e);
+                }
+            }
+
+            //copy file
+            this.copyFile(path.join(key, file), fullOutputPath, function(e) {
+                if(e) {
+                    callback(e);
+                }
+            })
+        }
     }
 }
 
