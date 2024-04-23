@@ -16,7 +16,7 @@ function Main() {
             let config = JSON.parse(fs.readFileSync(configpath));
             if(config.files && config.output) {
                 if(config.files.length > 0) {
-                    generator(config.files, config.output);
+                    generator(config.files, config.output, config);
                 } else {
                     throw "Empty file list";
                 }
