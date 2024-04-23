@@ -16,7 +16,6 @@ module.exports = function(f, output, config) {
 
     //sea config to be written back to file once patched. target "assets" property (key <file path>: real asset path)
     let seaConfig = JSON.parse(fs.readFileSync(seaConfigPath).toString());
-    console.log(seaConfig);
 
     //run globsync and patch the assets. preserve pre-existing assets
     //f is a str list of files to be included
@@ -27,6 +26,9 @@ module.exports = function(f, output, config) {
             //make sure file exists, otherwise throw error
             let fileAbsolutePath = files[ii];
             let key = path.relative(ROOT, fileAbsolutePath);
+            console.log(`Add: ${fileAbsolutePath}`);
+
+            //throw error if trying to add file that doesn't exist anymore
             if(!fs.existsSync(fileAbsolutePath)) {
                 console.log(`ERROR: File "${fileAbsolutePath}" was not found.`);
                 process.exit(1);
@@ -38,4 +40,7 @@ module.exports = function(f, output, config) {
     //write changes to config file
     console.log(`Write changes to: ${seaConfigPath}`);
     fs.writeFileSync(seaConfigPath, JSON.stringify(seaConfig, null, 2));
+
+    //write template
+    fs.copyFileSync(path.join(__dirname, "../templates/sea.template.js"), output);
 }
