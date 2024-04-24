@@ -101,7 +101,6 @@ module.exports = {
         }
 
         //at this point, files is a list of files in the source directory to be copied
-        console.log(files);
         for(let i = 0; i < files.length; i++) {
             let file = files[i];
             let fullOutputPath = path.join(outdir, file);
