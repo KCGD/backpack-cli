@@ -1,4 +1,4 @@
-const { createWriteStream, existsSync, mkdirSync } = require('fs');
+const { createWriteStream, existsSync, mkdirSync, writeFileSync } = require('fs');
 const sea = require('node:sea');
 const path = require('path');
 const { Readable } = require('stream');
@@ -13,6 +13,10 @@ module.exports = {
         read(key, callback);
     },
 
+    "readFileSync": function(key) {
+        readSync(key);
+    },
+
     //read file as stream, returns in callback
     "readStream": function(key, callback) {
         read(key, function(e, data) {
@@ -22,6 +26,10 @@ module.exports = {
                 callback(undefined, Readable.from(data));
             }
         })
+    },
+
+    "readStreamSync": function(key) {
+        return Readable.from(readSync(key));
     },
 
     //copy file to output path. callback error if present, otherwise callback w/ undefined
@@ -46,7 +54,43 @@ module.exports = {
         })
     },
 
+    "copyFileSync": function(key, output) {
+        writeFileSync(output, readSync(key));
+    },
+
     "copyDirectory": function(key, outdir, callback) {
+        let map = JSON.parse(MAP);
+        let files = [];
+        let keys = Object.keys(map);
+        for(let i = 0; i < keys.length; i++) {
+            if(keys[i].startsWith(key)) {
+                files.push(path.relative(key, keys[i]));
+            }
+        }
+
+        //at this point, files is a list of files in the source directory to be copied
+        for(let i = 0; i < files.length; i++) {
+            let file = files[i];
+            let fullOutputPath = path.join(outdir, file);
+            if(!existsSync(path.dirname(fullOutputPath))) {
+                try {
+                    mkdirSync(path.dirname(fullOutputPath), {'recursive':true});
+                } catch (e) {
+                    callback(e);
+                }
+            }
+
+            //copy file
+            this.copyFile(path.join(key, file), fullOutputPath, function(e) {
+                if(e) {
+                    console.log(e)
+                    callback(e);
+                }
+            })
+        }
+    },
+
+    "copyDirectorySync": function(key, outdir) {
         let map = JSON.parse(MAP);
         let files = [];
         let keys = Object.keys(map);
@@ -61,20 +105,16 @@ module.exports = {
         for(let i = 0; i < files.length; i++) {
             let file = files[i];
             let fullOutputPath = path.join(outdir, file);
-            if(!existsSync(path.basename(fullOutputPath))) {
+            if(!existsSync(path.dirname(fullOutputPath))) {
                 try {
                     mkdirSync(path.dirname(fullOutputPath), {'recursive':true});
                 } catch (e) {
-                    callback(e);
+                    throw e;
                 }
             }
 
             //copy file
-            this.copyFile(path.join(key, file), fullOutputPath, function(e) {
-                if(e) {
-                    callback(e);
-                }
-            })
+            this.copyFileSync(path.join(key, file), fullOutputPath);
         }
     }
 }
@@ -89,5 +129,13 @@ function read(key, callback) {
         } catch (e) {
             callback(e, undefined);
         }
+    }
+}
+
+function readSync(key) {
+    if(!sea.isSea()) {
+        throw "NODE_NOT_SEA"
+    } else {
+        return Buffer.from(sea.getRawAsset(key));
     }
 }
