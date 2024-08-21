@@ -20,6 +20,11 @@ module.exports = function(f, output, config, passthrough) {
     //sea config to be written back to file once patched. target "assets" property (key <file path>: real asset path)
     let seaConfig = JSON.parse(fs.readFileSync(seaConfigPath).toString());
 
+    //warn if using passthrough
+    if(passthrough) {
+        console.log(`WARN: Using file passthrough! (Rom will read from actual file system)`)
+    }
+
     //run globsync and patch the assets. preserve pre-existing assets
     //f is a str list of files to be included
     const ROOT = ".";
