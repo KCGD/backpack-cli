@@ -5,7 +5,7 @@ const { globSync } = require('glob');
 
 const PATCH_PRIMER = "// START DATA";
 
-module.exports = function(f, output, config) {
+module.exports = function(f, output, config, passthrough) {
     //make sure sea config exists (expected in config.seaConfigPath)
     let seaConfigPath
     if(path.isAbsolute(config.seaConfigPath)) {
@@ -45,11 +45,11 @@ module.exports = function(f, output, config) {
     fs.writeFileSync(seaConfigPath, JSON.stringify(seaConfig, null, 2));
 
     //write template
-    patch(path.join(__dirname, "../templates/sea.template.js"), JSON.stringify(seaConfig.assets), output);
+    patch(path.join(__dirname, "../templates/sea.template.js"), JSON.stringify(seaConfig.assets), output, passthrough);
 }
 
 //patcher function, given template path, encoding and output, generates a rom module
-function patch(template, data, output) {
+function patch(template, data, output, passthrough) {
     let primed = false;
     let out = fs.createWriteStream(output);
 
@@ -63,6 +63,7 @@ function patch(template, data, output) {
     rl.on('line', function(line) {
         if(primed) {
             out.write(`const MAP = \`${data}\`;\n`);
+            out.write(`const PASSTHROUGH = ${passthrough? "true" : "false"};\n`);
             primed = false;
         } else {
             out.write(line + "\n");

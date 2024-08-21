@@ -1,4 +1,4 @@
-const { createWriteStream, existsSync, mkdirSync, writeFileSync } = require('fs');
+const { createWriteStream, existsSync, mkdirSync, writeFileSync, readFileSync } = require('fs');
 const sea = require('node:sea');
 const path = require('path');
 const { Readable } = require('stream');
@@ -6,6 +6,8 @@ const { Readable } = require('stream');
 // START DATA
 
 // END DATA
+
+const MAP_OBJECT = JSON.parse(MAP);
 
 module.exports = {
     //reads file, returns as buffer in callback(error, buffer)
@@ -59,9 +61,8 @@ module.exports = {
     },
 
     "copyDirectory": function(key, outdir, callback) {
-        let map = JSON.parse(MAP);
         let files = [];
-        let keys = Object.keys(map);
+        let keys = Object.keys(MAP_OBJECT);
         for(let i = 0; i < keys.length; i++) {
             if(keys[i].startsWith(key)) {
                 files.push(path.relative(key, keys[i]));
@@ -91,9 +92,8 @@ module.exports = {
     },
 
     "copyDirectorySync": function(key, outdir) {
-        let map = JSON.parse(MAP);
         let files = [];
-        let keys = Object.keys(map);
+        let keys = Object.keys(MAP_OBJECT);
         for(let i = 0; i < keys.length; i++) {
             if(keys[i].startsWith(key)) {
                 files.push(path.relative(key, keys[i]));
@@ -120,11 +120,15 @@ module.exports = {
 
 //accepts key, callback(error string or undefined, data as buffer)
 function read(key, callback) {
-    if(!sea.isSea()) {
+    if(!sea.isSea() && !PASSTHROUGH) {
         callback("NODE_NOT_SEA", undefined);
     } else {
         try {
-            callback(undefined, Buffer.from(sea.getRawAsset(key)));
+            if(PASSTHROUGH) {
+                callback(undefined, Buffer.from(fs.readFileSync(MAP_OBJECT[key])));
+            } else {
+                callback(undefined, Buffer.from(sea.getRawAsset(key)));
+            }
         } catch (e) {
             callback(e, undefined);
         }
@@ -132,9 +136,13 @@ function read(key, callback) {
 }
 
 function readSync(key) {
-    if(!sea.isSea()) {
+    if(!sea.isSea() && !PASSTHROUGH) {
         throw "NODE_NOT_SEA"
     } else {
-        return Buffer.from(sea.getRawAsset(key));
+        if(PASSTHROUGH) {
+            return Buffer.from(fs.readFileSync(MAP_OBJECT[key]));
+        } else {
+            return Buffer.from(sea.getRawAsset(key));
+        }
     }
 }
