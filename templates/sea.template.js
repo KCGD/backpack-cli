@@ -125,7 +125,7 @@ function read(key, callback) {
     } else {
         try {
             if(PASSTHROUGH) {
-                callback(undefined, Buffer.from(fs.readFileSync(MAP_OBJECT[key])));
+                callback(undefined, Buffer.from(readFileSync(MAP_OBJECT[key])));
             } else {
                 callback(undefined, Buffer.from(sea.getRawAsset(key)));
             }
@@ -140,7 +140,7 @@ function readSync(key) {
         throw "NODE_NOT_SEA"
     } else {
         if(PASSTHROUGH) {
-            return Buffer.from(fs.readFileSync(MAP_OBJECT[key]));
+            return Buffer.from(readFileSync(MAP_OBJECT[key]));
         } else {
             return Buffer.from(sea.getRawAsset(key));
         }
