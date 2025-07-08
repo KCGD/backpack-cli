@@ -16,7 +16,7 @@ module.exports = {
     },
 
     "readFileSync": function(key) {
-        readSync(key);
+        return readSync(key);
     },
 
     //read file as stream, returns in callback
