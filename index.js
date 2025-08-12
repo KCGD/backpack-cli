@@ -19,9 +19,9 @@ module.exports = function(f, output, config) {
     if(process.argv.includes("--use-sea")) {
         //validate node version
         if(
-            parseInt(version.split(".")[0]) >= parseInt(SEA_REQUIRED_VERSION.split(".")[0]) &&      //compare major version
-            parseInt(version.split(".")[1]) >= parseInt(SEA_REQUIRED_VERSION.split(".")[1]) &&      //compare minor version
-            parseInt(version.split(".")[2]) >= parseInt(SEA_REQUIRED_VERSION.split(".")[2])         //compare patch version
+            parseInt(version.split(".")[0]) < parseInt(SEA_REQUIRED_VERSION.split(".")[0]) ||
+            parseInt(version.split(".")[1]) < parseInt(SEA_REQUIRED_VERSION.split(".")[1]) ||
+            parseInt(version.split(".")[2]) < parseInt(SEA_REQUIRED_VERSION.split(".")[2])
         ) {
             seaBackend(f, output, config, process.argv.includes("--passthrough"));
         } else {
