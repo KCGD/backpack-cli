@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const romBackend = require("./backends/rom");
 const seaBackend = require("./backends/sea");
+import { compareVersions } from 'compare-versions';
 
 const SEA_REQUIRED_VERSION = '21.7.3';
 
@@ -17,25 +18,8 @@ module.exports = function(f, output, config) {
     //decide which backend to use
     let version = process.versions.node;
     if(process.argv.includes("--use-sea")) {
-        //validate node version
-        let version_ok = true;
-
-        // version - major
-        if(parseInt(version.split(".")[0]) < parseInt(SEA_REQUIRED_VERSION.split(".")[0])) {
-            version_ok = false;
-        }
-
-        // version - minor
-        else if(parseInt(version.split(".")[1]) < parseInt(SEA_REQUIRED_VERSION.split(".")[1])) {
-            version_ok = false;
-        }
-
-        // version - patch
-        else if(parseInt(version.split(".")[2]) < parseInt(SEA_REQUIRED_VERSION.split(".")[2])) {
-            version_ok = false;
-        }
-
-        if(version_ok) {
+        //validate node versios
+        if(compareVersions(version, SEA_REQUIRED_VERSION) >= 0) {
             seaBackend(f, output, config, process.argv.includes("--passthrough"));
         } else {
             //node version too low

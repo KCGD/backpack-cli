@@ -6,6 +6,7 @@
   "author": "KCGD",
   "license": "GPL-2.0-only",
   "dependencies": {
+    "compare-versions": "^6.1.1",
     "glob": "^10.3.10",
     "yauzl": "^2.10.0",
     "yazl": "^2.5.1"
