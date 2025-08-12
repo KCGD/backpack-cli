@@ -14,7 +14,7 @@ import { compareVersions } from 'compare-versions';
 
 const SEA_REQUIRED_VERSION = '21.7.3';
 
-module.exports = function(f, output, config) {
+export default function(f, output, config) {
     //decide which backend to use
     let version = process.versions.node;
     if(process.argv.includes("--use-sea")) {
