@@ -9,7 +9,7 @@ import { Readable } from 'stream';
 
 const MAP_OBJECT = JSON.parse(MAP);
 
-module.exports = {
+export default {
     //reads file, returns as buffer in callback(error, buffer)
     "readFile": function(key, callback) {
         read(key, callback);

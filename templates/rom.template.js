@@ -9,7 +9,7 @@ const { createWriteStream } = require('fs');
 const buffer = Buffer.from(DATA, "base64");
 
 //define exports
-module.exports = {
+export default {
     //fs-like readFile, returns buffer via callback
     "readFile": function(pattern, callback) {
         read(buffer, pattern, function(err, res) {
