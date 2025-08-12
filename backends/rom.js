@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const yazl = require('yazl');
-const readline = require('readline');
-const { Buffer } = require('buffer');
-const { globSync } = require('glob');
+import fs from 'fs';
+import path from 'path';
+import yazl from 'yazl';
+import readline from 'readline';
+import { Buffer } from 'buffer';
+import { globSync } from 'glob';
 
 //configuration
 const PATCH_PRIMER = "// START DATA";
@@ -12,7 +12,7 @@ const PATCH_PRIMER = "// START DATA";
 let totalsize = 0;
 let totalfiles = 0;
 
-module.exports = function(f, output, config){
+export default function(f, output, config){
     let zip = new yazl.ZipFile();
     console.log(process.cwd());
     let buffers = [];

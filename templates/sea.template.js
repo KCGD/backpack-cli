@@ -1,7 +1,7 @@
-const { createWriteStream, existsSync, mkdirSync, writeFileSync, readFileSync } = require('fs');
-const sea = require('node:sea');
-const path = require('path');
-const { Readable } = require('stream');
+import { createWriteStream, existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
+import * as sea from "node:sea";
+import * as path from "path";
+import { Readable } from 'stream';
 
 // START DATA
 

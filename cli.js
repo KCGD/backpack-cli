@@ -3,9 +3,9 @@
 //by default reads rom.config.json
 //expects properties: files as an array of paths, output as a path
 
-const fs = require('fs');
-const path = require('path');
-const generator = require('./index.js')
+import fs from 'fs';
+import path from 'path';
+import generator from './index.js';
 
 const configpath = path.join(process.cwd(), "./rom.config.json");
 
