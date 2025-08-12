@@ -8,8 +8,8 @@
 //  typescript: boolean
 import * as fs from "fs";
 import * as path from "path";
-import romBackend from "./backends/rom";
-import seaBackend from "./backends/sea";
+import romBackend from "./backends/rom.js";
+import seaBackend from "./backends/sea.js";
 import { compareVersions } from 'compare-versions';
 
 const SEA_REQUIRED_VERSION = '21.7.3';
