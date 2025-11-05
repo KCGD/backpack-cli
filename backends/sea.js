@@ -1,11 +1,16 @@
-const fs = require('fs');
-const path = require('path');
-const readline = require('readline');
-const { globSync } = require('glob');
+import * as fs from "fs";
+import * as path from "path";
+import * as readline from "readline";
+import { globSync } from "glob";
+
+let metaurl = path.dirname(import.meta.url);
+let metafilesplit = metaurl.split("file:");
+metafilesplit.shift();
+const __dirname = metafilesplit.join('');
 
 const PATCH_PRIMER = "// START DATA";
 
-module.exports = function(f, output, config, passthrough) {
+export default function(f, output, config, passthrough) {
     //make sure sea config exists (expected in config.seaConfigPath)
     let seaConfigPath
     if(path.isAbsolute(config.seaConfigPath)) {

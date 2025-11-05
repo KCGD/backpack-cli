@@ -8,7 +8,6 @@
 //  typescript: boolean
 import * as fs from "fs";
 import * as path from "path";
-import romBackend from "./backends/rom.js";
 import seaBackend from "./backends/sea.js";
 import { compareVersions } from 'compare-versions';
 
@@ -27,7 +26,6 @@ export default function(f, output, config) {
             process.exit(1);
         }
     } else {
-        console.log("Using ROM backend");
-        romBackend(f, output, config);
+        console.error(`ROM Backend is no longer supported.`);
     }
 }
