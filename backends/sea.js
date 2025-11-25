@@ -1,9 +1,9 @@
 import * as fs from "fs";
+import { globSync } from "glob";
 import * as path from "path";
 import * as readline from "readline";
-import { globSync } from "glob";
 
-let metaurl = path.dirname(import.meta.url);
+let metaurl = path.dirname(decodeURI(import.meta.url));
 let metafilesplit = metaurl.split("file:");
 metafilesplit.shift();
 const __dirname = metafilesplit.join('');
